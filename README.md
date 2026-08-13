@@ -327,10 +327,41 @@ Como o projeto não possui interface gráfica, utilize um cliente HTTP como **In
 
 Ao montar as requisições POST, PUT e PATCH, selecione o tipo de corpo **JSON** para que o cabeçalho `Content-Type: application/json` seja enviado corretamente — caso contrário o servidor não conseguirá interpretar os dados.
 
+## Evidências de teste
+
+Os testes abaixo foram executados com o **Thunder Client**, cobrindo os cenários de sucesso e de falha da API. As capturas exibem o corpo da requisição, o JSON retornado e o status HTTP de cada operação.
+
+> As requisições foram feitas na porta 3001, definida através da variável `PORT`, por a porta padrão estar ocupada por outra aplicação no ambiente local.
+
+### 1. Criação com sucesso — 201 Created
+
+Cadastro de um novo usuário com os campos `nome` e `email` preenchidos.
+
+![POST /usuarios retornando 201 Created](docs/01-post-criacao-sucesso.png)
+
+### 2. Falha na validação — 400 Bad Request
+
+Tentativa de cadastro omitindo o campo `email`, barrada pela validação antes de qualquer gravação.
+
+![POST /usuarios retornando 400 Bad Request](docs/02-post-falha-validacao.png)
+
+### 3. Listagem geral — 200 OK
+
+Consulta de todos os usuários cadastrados. Note que o registro rejeitado no teste anterior não aparece na lista.
+
+![GET /usuarios retornando 200 OK](docs/03-get-listagem.png)
+
+### 4. Busca por ID inexistente — 404 Not Found
+
+Consulta a um identificador que não existe na base.
+
+![GET /usuarios/9999 retornando 404 Not Found](docs/04-get-id-inexistente.png)
+
 ## Estrutura do projeto
 
 ```
 api-connect-marcos-territo/
+├── docs/                                # Capturas de tela dos testes
 ├── node_modules/                        # Dependências (ignorado pelo Git)
 ├── src/
 │   ├── controllers/
