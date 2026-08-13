@@ -1,4 +1,7 @@
+// Ponto de entrada: configura o servidor e monta as rotas da aplicacao.
+
 const express = require('express');
+const usuariosRoutes = require('./src/routes/usuarios.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -6,44 +9,8 @@ const PORT = process.env.PORT || 3000;
 // Permite receber JSON no corpo das requisicoes
 app.use(express.json());
 
-// "Banco de dados" em memoria
-const usuarios = [];
-let proximoId = 1;
-
-// POST /usuarios - cria um novo usuario
-app.post('/usuarios', (req, res) => {
-  const { nome, email } = req.body || {};
-
-  if (!nome) {
-    return res.status(400).json({ error: 'O campo nome é obrigatório.' });
-  }
-
-  if (!email) {
-    return res.status(400).json({ error: 'O campo e-mail é obrigatório.' });
-  }
-
-  const usuario = { id: proximoId++, nome, email };
-  usuarios.push(usuario);
-
-  return res.status(201).json({ data: usuario });
-});
-
-// GET /usuarios - lista todos os usuarios
-app.get('/usuarios', (req, res) => {
-  return res.status(200).json(usuarios);
-});
-
-// GET /usuarios/:id - busca um usuario pelo id
-app.get('/usuarios/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const usuario = usuarios.find((u) => u.id === id);
-
-  if (!usuario) {
-    return res.status(404).json({ error: 'Usuário não encontrado' });
-  }
-
-  return res.status(200).json(usuario);
-});
+// Todas as rotas do recurso usuarios respondem sob /usuarios
+app.use('/usuarios', usuariosRoutes);
 
 const servidor = app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
